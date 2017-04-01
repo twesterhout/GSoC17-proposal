@@ -82,7 +82,7 @@
     \end{labeling}
 
 \section{Background Information}
-    I'm currently in my third year of Bachelor in Physics program at Radboud University (The Netherlands) and plan on defending my thesis in June. Although I major in physics, I'm quite interested in programming, follow CS courses and plan on obtaining a Bachelor degree in CS within the next two years. By now, I've done the following project-related courses:
+    I'm currently in my third year of Bachelor in Physics program at Radboud University (The Netherlands) and plan on defending my thesis in June. Although I major in physics, I'm quite interested in programming, follow CS courses and plan on obtaining a Bachelor degree in CS while doing a Master program in Physics. By now, I've done the following project-related courses:
     \begin{itemize}
     \item \textit{Imperative Programming 1 \& 2} (Introduction to \texttt{C++}).
     \item \textit{Hacking in C} (Memory layout, calling conventions and debugging). 
@@ -92,28 +92,28 @@
     \item \textit{Functional Programming 1 \& 2}.
     \end{itemize}
 
-    For the last two years I've been working as a teaching assistant at Radboud University. I taught both physics and programming. In 2015 I taught \texttt{C} to first year physics and/or math majors; in 2016 --- \texttt{Python 3}. 
+    For the last two years I've been working as a teaching assistant at Radboud University. I taught both physics and programming. In 2015 I taught \texttt{C} to first year physics and math majors; in 2016 --- \texttt{Python 3}. 
 
     Lately, I've been writing code (as part of my Bachelor thesis) for distributed memory systems to perform some physical calculations. I work with quantum mechanical 2D fractal structures that don't exhibit translational symmetry, which makes calculations on them quite challenging. I've been calculating plasmonic properties of some materials using a newly developed method that some people believed to be impossible (too computationally expensive). We plan to publish a paper about it soon. Some code and documentation (both in early state of development) can be found on \url{https://github.com/twesterhout/plasmon-cpp/}.
 
-    Theoretical physicists are usually thinkers rather than doers. Thus in my spare time I've read some books about programming and \texttt{C++} in particular, e.g. Scott Meyers' ``Effective Modern C++'', Andrei Alexandrescu's ``Modern C++ Design'', etc. This got me interested in the modern part of \texttt{C++}, metaprogramming and library development. \texttt{Boost} seems a perfect place to apply my knowledge and learn from more experienced people in this area, and the \texttt{static\_map} project, i.e. ``compile-time stuff'' + ``modern \texttt{C++}'', is \textit{exactly} what I'm most interested in at the moment. Although I haven't done any work related to this project, I believe myself to be a fast learner. Being highly motivated, I hope to pick up on the background quite soon. 
+    Theoretical physicists are usually thinkers rather than doers. Thus in my spare time I've read some books about programming and \texttt{C++} in particular, e.g. Scott Meyers' ``Effective Modern C++'', Andrei Alexandrescu's ``Modern C++ Design''. This got me interested in the modern part of \texttt{C++}, metaprogramming and library development. \texttt{Boost} seems a perfect place to apply my knowledge and learn from more experienced people in this area, and the \texttt{static\_map} project, i.e. ``compile-time stuff'' + ``modern \texttt{C++}'', is \textit{exactly} what I'm most interested in at the moment. Although I haven't done any work related to this project, I believe myself to be a fast learner. Being highly motivated, I hope to pick up on the background quite soon. 
     
-    In case I succeed with this project, I'd very much like to continue working in this area, contributing to \texttt{Boost} and become a part of the community.
+    I'd very much like to continue my work in this area even after succeeding with this project, contribute to \texttt{Boost} and become a part of the community.
 
     As for my knowledge of the listed languages/technologies/tools, I'd rate it as follows:
     \begin{labeling}{\texttt{C++ Standard Library}}
-    \item [\texttt{C++ 98/03}] $\approx$ 2--3;
-    \item [\texttt{C++ 11/14}] $\approx$ 3--4;
-    \item [\texttt{C++ Standard Library}] $\approx$ 3--4;
-    \item [\texttt{Boost C++ Libraries}] $\approx$ 2--3;
-    \item [\texttt{Git}] $\approx$ 1--2.
+    \item [\texttt{C++ 98/03}] $\approx$ 3;
+    \item [\texttt{C++ 11/14}] $\approx$ 4;
+    \item [\texttt{C++ Standard Library}] $\approx$ 4;
+    \item [\texttt{Boost C++ Libraries}] $\approx$ 3;
+    \item [\texttt{Git}] $\approx$ 2.
     \end{labeling}
 
     I use \texttt{Linux} as my primary desktop operating system and have grown used to doing as much as possible via command line. Thus, usually I write code in \texttt{Vim} and use \texttt{Makefile}s to compile it. For documentation, I've been using \texttt{Doxygen}. But it's not the best choice when metaprogramming is involved. I'm open to learning \texttt{DocBook} as this is what \texttt{Boost} is using.
 
 \section{Project Proposal}
    
-    \paragraph{Motivation} There's often need for associative containers. \texttt{C++ Standard Library} provides \texttt{std::map} and \texttt{std::unordered\_map}. \texttt{Google} has \texttt{dense\_hash\_map}. There are many more implementations. These all focus on both insertion/deletion and lookup. However, sometimes we're only interested in the lookup capabilities. For example, when the container is initialised from constant static data or even constexpr data. While a C-style associative array may serve well as a storage for such data, it's inefficient in terms of accessing the data by key. Common associate containers, on the other hand, implement efficient lookup, but use dynamic memory allocation for initialisation which may be undesired in some cases. The following example illustrates it further.
+    \paragraph{Motivation} There's often need for associative containers. \texttt{C++ Standard Library} provides \texttt{std::map} and \texttt{std::unordered\_map}. \texttt{Google} has \texttt{dense\_hash\_map}. There are many more implementations. These all focus on both insertion/deletion and lookup. However, sometimes we're only interested in the lookup capabilities. For example, when the container is initialised from constant static data or even constexpr data. While a C-style associative array may serve well as a storage for such data, it's inefficient in terms of accessing the data by key. Common associate containers, on the other hand, implement efficient lookup, but use dynamic memory allocation for initialisation which may be undesired in some cases. The following example illustrates this further.
 
 \begin{spacing}{0.8}
 \begin{lstlisting}
@@ -268,10 +268,10 @@ at_0 = "orange";
         \end{tabular}
     \end{center}
 
-\section{Programming Competency}
-    The initial objective of was to reimplement the toy \texttt{static\_map} provided at \url{https://goo.gl/eO7ooa} so that \texttt{GCC} or \texttt{VS2017} would execute the non-\texttt{constexpr} assignment at compile time. 
+\section{Programming Competency Test}
+    The initial objective was to reimplement the toy \texttt{static\_map} provided at \url{https://goo.gl/eO7ooa} so that \texttt{GCC} or \texttt{VS2017} would execute the non-\texttt{constexpr} assignment at compile time. 
 
-    My first idea was to use SFINAE to detect whether parameters are \texttt{constexpr}, and if they are, store the result of the lookup in a \texttt{constexpr} variable, thus forcing the compiler to evaluate the operation at compile-time. Detecting \texttt{constexpr}ness of parameters, however, proved to be impossible. One could write a macro to detect whether an expression passed to it is actually a constant expression (as it is done in the following answer: \url{http://stackoverflow.com/a/40413051}). More or less what GCC's \texttt{\_\_builtin\_constant\_p} does. Unfortunately, this only works with one level of indirection:
+    My first idea was to use SFINAE to detect whether parameters were \texttt{constexpr}, and if they were, store the result of the lookup in a \texttt{constexpr} variable, thus forcing the compiler to evaluate the operation at compile-time. Detecting \texttt{constexpr}ness of parameters, however, proved to be impossible. One could write a macro to detect whether an expression passed to it was actually a constant expression (as it was done in the following answer: \url{http://stackoverflow.com/a/40413051}), more or less what GCC's \texttt{\_\_builtin\_constant\_p} does. Unfortunately, this only works with one level of indirection:
     \begin{spacing}{0.8}
 \begin{lstlisting}
 constexpr auto factorial(std::size_t const n) -> std::size_t
@@ -347,13 +347,13 @@ constexpr auto at(key_type const& k) const -> mapped_type const&
         \texttt{GCC-6.3} optimises the function completely, i.e. no runtime code is produced for it. To prove that Item \ref{itm:difficult_exceptions} is useful, substitute \texttt{key\_not\_found\_error\{\}} by \texttt{std::out\_of\_range\{"Key not found."\}} --- runtime code is back.
     \end{enumerate}
     
-    It was a matter of following the described rules of thumb to satisfy the requirements of the competency test. From Niall Douglas I've learned that the test has outgrown its initial requirements and a complete toy implementation of the proposal was now desired.
+    It was a matter of following the described rules of thumb to satisfy the requirements of the competency test. From Niall Douglas I've learned that the test has outgrown its initial requirements and a complete toy implementation of the proposal is now desired.
 
-    Adding support for iterators and custom hash and equals functions is a matter of doing. The only challenging part is initialisation of the \texttt{static\_map}. In the original solution initialisation went as follows: the user passes a \texttt{C}-style array to \texttt{make\_static\_map} function, it expands the array into a parameter pack and passes it to the \texttt{static\_map} constructor which initialises the underlying storage type (again a \texttt{C}-array) using list initialisation. To make use of hashing, elements in the underlying array must appear in a certain order. Sorting the array after initialisation seems like a bad solution, because keys are constant. Storing keys as non-\texttt{const} would make \texttt{static\_map} inconsistent with other associate containers, and using \texttt{const\_casts} seems like a dirty hack is this case. The good place to sort the array would be the \texttt{make\_static\_map} function. In the original implementation this function expands the array \texttt{il} using \texttt{std::index\_sequence<\_Is...>} as \texttt{il[\_Is]...}\ . Thus sorting can be achieved by expanding \texttt{il} as \texttt{il[}$\sigma($\texttt{\_Is}$)$\texttt{]...}, where $\sigma$ is some permutation. My implementation of this idea can be found in Appendix \ref{competency-code}.
+    Adding support for iterators and custom hash and equals functions is a matter of doing. The only challenging part is initialisation of the \texttt{static\_map}. In the original solution initialisation goes as follows: the user passes a \texttt{C}-style array to \texttt{make\_static\_map} function, it expands the array into a parameter pack and passes it to the \texttt{static\_map} constructor which initialises the underlying storage type (again a \texttt{C}-array) using list initialisation. To make use of hashing, elements in the underlying array must appear in a certain order. Sorting the array after initialisation seems like a bad solution, because keys are constant. Storing keys as non-\texttt{const} would make \texttt{static\_map} inconsistent with other associate containers, and using \texttt{const\_casts} seems like a dirty hack is this case. A good place to sort the array would be the \texttt{make\_static\_map} function. In the original implementation this function expands the array \texttt{il} using \texttt{std::index\_sequence<\_Is...>} as \texttt{il[\_Is]...}\ . Thus sorting can be achieved by expanding \texttt{il} as \texttt{il[}$\sigma($\texttt{\_Is}$)$\texttt{]...}, where $\sigma$ is some permutation. My implementation of this idea can be found in Appendix \ref{competency-code}.
 
-    Another interesting thing about the original implementation is that it uses an array of \texttt{std::pair<std::size\_t, std::pair<key\_type const, mapped\_type>} as underlying storage. I found the extra \texttt{std::size\_t} unnecessary and decided to use an array of \texttt{std::pair<key\_type const, mapped\_type>} as the underlying storage. But then, as indicated by Niall, my solution stopped working with \texttt{Clang}. Thus I've decided to follow the ``convention'' used in \texttt{libstdc++} and created an inner storage class that allows the \texttt{static\_map} be implemented independent of the type of underlying storage type. Addition of this inner class turned out to be crutial as now even \texttt{Clang} was happy to optimise code without the extra \texttt{std::size\_t}.
+    Another interesting thing about the original implementation is that it uses an array of \texttt{std::pair<std::size\_t, std::pair<key\_type const, mapped\_type>} as underlying storage. I found the extra \texttt{std::size\_t} unnecessary and decided to use an array of \texttt{std::pair<key\_type const, mapped\_type>} as the underlying storage. But then, as indicated by Niall, my solution stopped working with \texttt{Clang}. Thus I've decided to follow the ``convention'' used in \texttt{libstdc++} and created an inner storage class that allows the \texttt{static\_map} to be implemented independent of the underlying storage type. Addition of this inner class turned out to be crutial as now even \texttt{Clang} was happy to optimise code without the extra \texttt{std::size\_t}.
 
-    My complete toy implementation of \texttt{static\_map} can be found in Appendix \ref{competency-code} or online on \url{https://github.com/twesterhout/GSoC17-proposal/blob/master/static_map.cpp} (easier to copy-paste into Compiler Explorer). The ``challenging cases'' work with both \texttt{GCC-6+} and \texttt{Clang-3.9+}.
+    My complete toy implementation of \texttt{static\_map} can be found in Appendix \ref{competency-code} or online on \url{https://github.com/twesterhout/GSoC17-proposal/blob/master/static_map.cpp} (easier to copy-paste into \texttt{Compiler Explorer}). The ``challenging cases'' work with both \texttt{GCC-6+} and \texttt{Clang-3.9+}.
 
 \newpage
 \appendix
