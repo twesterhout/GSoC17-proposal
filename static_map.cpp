@@ -2,9 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <type_traits>
-
 #include <experimental/string_view>
-
 
 struct key_not_found_error : std::exception {
 	auto what() const noexcept -> char const* override
@@ -159,8 +157,7 @@ constexpr typename _Static_map::size_type map_iterator<_Static_map, _is_const>::
 
 struct equal_c {
 	template <class _Char>
-	constexpr auto operator()( _Char const* const a
-	                         , _Char const* const b ) const 
+	constexpr auto operator()(_Char const* const a, _Char const* const b) const 
 		noexcept( noexcept(std::declval<_Char>() == std::declval<_Char>()) 
 		       && noexcept(std::declval<_Char>() != std::declval<_Char>()) )
 	{
@@ -287,7 +284,6 @@ class static_map {
 
 public:
 	using type                = static_map<_Key, _Tp, _N, _Pred, _Hasher>;
-
 	using key_type            = _Key;
 	using mapped_type         = _Tp;
 	using key_equal           = _Pred;
@@ -437,18 +433,15 @@ namespace {
 
 template <std::size_t _N>
 __attribute__((always_inline))
-inline constexpr auto _insert( std::size_t const index
-                             , std::size_t const guess
+inline constexpr auto _insert( std::size_t const index, std::size_t const guess
                              , std::size_t (&indices)[_N] ) noexcept
 {
 	auto i = guess;
-
 	while (i < _N && indices[i] != _N) { ++i; }
 	if (i == _N) {
 		i = 0;
 		while (i < guess && indices[i] != _N) { ++i; }
 	}
-
 	indices[i] = index;
 }
 

@@ -353,8 +353,9 @@ constexpr auto at(key_type const& k) const -> mapped_type const&
 
     Another interesting thing about the original implementation is that it uses an array of \texttt{std::pair<std::size\_t, std::pair<key\_type const, mapped\_type>} as underlying storage. I found the extra \texttt{std::size\_t} unnecessary and decided to use an array of \texttt{std::pair<key\_type const, mapped\_type>} as the underlying storage. But then, as indicated by Niall, my solution stopped working with \texttt{Clang}. Thus I've decided to follow the ``convention'' used in \texttt{libstdc++} and created an inner storage class that allows the \texttt{static\_map} be implemented independent of the type of underlying storage type. Addition of this inner class turned out to be crutial as now even \texttt{Clang} was happy to optimise code without the extra \texttt{std::size\_t}.
 
-    My complete toy implementation of \texttt{static\_map} can be found in Appendix \ref{competency-code} or online on \url{} (easier to copy-paste into Compiler Explorer).
+    My complete toy implementation of \texttt{static\_map} can be found in Appendix \ref{competency-code} or online on \url{https://github.com/twesterhout/GSoC17-proposal/blob/master/static_map.cpp} (easier to copy-paste into Compiler Explorer). The ``challenging cases'' work with both \texttt{GCC-6+} and \texttt{Clang-3.9+}.
 
+\newpage
 \appendix
 \section{Code} \label{competency-code}
     \begin{spacing}{0.8}
