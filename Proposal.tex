@@ -1,0 +1,364 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{textcomp}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{verbatim}
+
+\usepackage{setspace}
+\usepackage{scrextend}
+\usepackage{multirow}
+\usepackage{pbox}
+
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{csquotes}
+\usepackage{hyperref}
+
+\usepackage{listings}
+
+
+
+\lstset{ %
+    backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+    basicstyle=\scriptsize\ttfamily,        % the size of the fonts that are used for the code
+    breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+    breaklines=true,                 % sets automatic line breaking
+    captionpos=b,                    % sets the caption-position to bottom
+    commentstyle=\itshape\color[HTML]{555555},    % comment style
+    %deletekeywords={...},            % if you want to delete keywords from the given language
+    %escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+    extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+    frame=single,	                   % adds a frame around the code
+    keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+    keywordstyle=\bfseries\color[HTML]{2D578C},       % keyword style
+    language=C++,                 % the language of the code
+    morekeywords={constexpr,noexcept},           % if you want to add more keywords to the set
+    numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+    numbersep=10pt,                   % how far the line-numbers are from the code
+    numberstyle=\tiny\color[HTML]{333333}, % the style that is used for the line-numbers
+    rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+    showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+    showstringspaces=false,          % underline spaces within strings only
+    showtabs=false,                  % show tabs within strings adding particular underscores
+    stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+    stringstyle=\color[HTML]{488A4C},     % string literal style
+    tabsize=2,	                   % sets default tabsize to 2 spaces
+    title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+
+
+\title{Google Summer of Code Proposal: Boost \texttt{static\_map}}
+\date{March 2017}
+
+
+\bibliography{bibliography}
+
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    This document proposes an addition to \texttt{Boost C++ Libraries} -- a \textit{compile-time} hash table. There are multiple good implementations of unordered associate containers (e.g. \texttt{std::unordered\_map}, \texttt{Google}'s \texttt{sparsehash}). These implementations provide both lookup and insertion/deletion functionality. They are, however, not the perfect fit for the case when the contents of the container are fixed upon construction or even known at compile time. \texttt{std::vector} vs. \texttt{std::array} is a good analogy hear. We propose a \texttt{static\_map} associate container with focus on \texttt{constexpr} usage.
+\end{abstract}
+
+\section{Personal Details}
+    \begin{labeling}{Degree Program}
+    \item [Name] Tom Westerhout
+    \item [University] Radboud University of Nijmegen, The Netherlands
+    \item [Degree Program] Bachelor in Physics
+    \item [Email] \texttt{tom@rstl-w.org}
+    \item [Availability] I consider \texttt{GSoC} as a full-time job/internship, thus I plan to spend at least 40 hours per week working on the project. I have an exam in April and, in case I fail it, the retake is planned on the 24th of May. 29th (Monday) or 30th of May (the official start date) seems like a good starting point to me. My summer vacation officially starts only on the 1st of July, before that I have some courses to follow, exams to take and a thesis to defend. During this time I plan on working only 4 hours a day, including weekends. However, this does not seem like a big issue to me, because I have no other commitments in July and August and can easily compensate for the lost time. Working 8 hours a day Mon through Fri $+$ 5 hours a day on Sat and Sun would result in more than 40 hours/week, if averaged over the whole work period. End August (the official end of coding) is a nice point to stop, because my summer vacation ends on the 1st of September.
+    \end{labeling}
+
+\section{Background Information}
+    I'm currently in my third year of Bachelor in Physics program at Radboud University (The Netherlands) and plan on defending my thesis in June. Although I major in physics, I'm quite interested in programming, follow CS courses and plan on obtaining a Bachelor degree in CS within the next two years. By now, I've done the following project-related courses:
+    \begin{itemize}
+    \item \textit{Imperative Programming 1 \& 2} (Introduction to \texttt{C++}).
+    \item \textit{Hacking in C} (Memory layout, calling conventions and debugging). 
+    \item \textit{Object Orientation}.
+    \item \textit{Algorithms \& Datastructures}.
+    \item \textit{Languages and Automata}.
+    \item \textit{Functional Programming 1 \& 2}.
+    \end{itemize}
+
+    For the last two years I've been working as a teaching assistant at Radboud University. I taught both physics and programming. In 2015 I taught \texttt{C} to first year physics and/or math majors; in 2016 --- \texttt{Python 3}. 
+
+    Lately, I've been writing code (as part of my Bachelor thesis) for distributed memory systems to perform some physical calculations. I work with quantum mechanical 2D fractal structures that don't exhibit translational symmetry, which makes calculations on them quite challenging. I've been calculating plasmonic properties of some materials using a newly developed method that some people believed to be impossible (too computationally expensive). We plan to publish a paper about it soon. Some code and documentation (both in early state of development) can be found on \url{https://github.com/twesterhout/plasmon-cpp/}.
+
+    Theoretical physicists are usually thinkers rather than doers. Thus in my spare time I've read some books about programming and \texttt{C++} in particular, e.g. Scott Meyers' ``Effective Modern C++'', Andrei Alexandrescu's ``Modern C++ Design'', etc. This got me interested in the modern part of \texttt{C++}, metaprogramming and library development. \texttt{Boost} seems a perfect place to apply my knowledge and learn from more experienced people in this area, and the \texttt{static\_map} project, i.e. ``compile-time stuff'' + ``modern \texttt{C++}'', is \textit{exactly} what I'm most interested in at the moment. Although I haven't done any work related to this project, I believe myself to be a fast learner. Being highly motivated, I hope to pick up on the background quite soon. 
+    
+    In case I succeed with this project, I'd very much like to continue working in this area, contributing to \texttt{Boost} and become a part of the community.
+
+    As for my knowledge of the listed languages/technologies/tools, I'd rate it as follows:
+    \begin{labeling}{\texttt{C++ Standard Library}}
+    \item [\texttt{C++ 98/03}] $\approx$ 2--3;
+    \item [\texttt{C++ 11/14}] $\approx$ 3--4;
+    \item [\texttt{C++ Standard Library}] $\approx$ 3--4;
+    \item [\texttt{Boost C++ Libraries}] $\approx$ 2--3;
+    \item [\texttt{Git}] $\approx$ 1--2.
+    \end{labeling}
+
+    I use \texttt{Linux} as my primary desktop operating system and have grown used to doing as much as possible via command line. Thus, usually I write code in \texttt{Vim} and use \texttt{Makefile}s to compile it. For documentation, I've been using \texttt{Doxygen}. But it's not the best choice when metaprogramming is involved. I'm open to learning \texttt{DocBook} as this is what \texttt{Boost} is using.
+
+\section{Project Proposal}
+   
+    \paragraph{Motivation} There's often need for associative containers. \texttt{C++ Standard Library} provides \texttt{std::map} and \texttt{std::unordered\_map}. \texttt{Google} has \texttt{dense\_hash\_map}. There are many more implementations. These all focus on both insertion/deletion and lookup. However, sometimes we're only interested in the lookup capabilities. For example, when the container is initialised from constant static data or even constexpr data. While a C-style associative array may serve well as a storage for such data, it's inefficient in terms of accessing the data by key. Common associate containers, on the other hand, implement efficient lookup, but use dynamic memory allocation for initialisation which may be undesired in some cases. The following example illustrates it further.
+
+\begin{spacing}{0.8}
+\begin{lstlisting}
+#include <iostream>
+#include <initializer_list>
+#include <map>
+#include <unordered_map>
+#include <experimental/string_view>
+using std::experimental::string_view;
+
+enum class weekday { sunday, monday, tuesday, wednesday
+                   , thursday, friday, saturday };
+
+#define STRING_VIEW(str) string_view{ str, sizeof(str)-1 }
+constexpr std::initializer_list<std::pair< const string_view
+                                         , weekday>> string_to_weekday 
+    { { STRING_VIEW("sunday"),    weekday::sunday    }
+    , { STRING_VIEW("monday"),    weekday::monday    }
+    , { STRING_VIEW("tuesday"),   weekday::tuesday   }
+    , { STRING_VIEW("wednesday"), weekday::wednesday }
+    , { STRING_VIEW("thursday"),  weekday::thursday  }
+    , { STRING_VIEW("friday"),    weekday::friday    }
+    , { STRING_VIEW("saturday"),  weekday::saturday  }
+    };
+
+int main(void)
+{
+    {
+        // Calls malloc() at least 7 times
+        static const std::map<string_view, weekday> 
+            to_weekday1 = string_to_weekday;
+        std::cout << "'monday' maps to " 
+                  << static_cast<int>(to_weekday1.at("monday")) 
+                  << std::endl;
+        std::cout << "'friday' maps to " 
+                  << static_cast<int>(to_weekday1.at("friday")) 
+                  << std::endl;
+        // Calls free() at least 7 times
+    }
+    {
+        // Calls malloc() at least 8 times
+        static const std::unordered_map<string_view, weekday> 
+            to_weekday2 = string_to_weekday;
+        std::cout << "'monday' maps to " 
+                  << static_cast<int>(to_weekday2.at("monday")) 
+                  << std::endl;
+        std::cout << "'friday' maps to " 
+                  << static_cast<int>(to_weekday2.at("friday")) 
+                  << std::endl;
+        // Calls free() at least 8 times
+    }
+    return 0;
+}
+\end{lstlisting}
+\end{spacing}
+    
+    Even though the \texttt{string\_to\_weekday} is \texttt{constexpr}, to make use of fast lookups ($\mathcal{O}(1)$ for \texttt{unordered\_map} and $\mathcal{O}(\log(N))$ for \texttt{map} compared to $\mathcal{O}(N)$ of linear searching) we have to copy data at runtime, which involves dynamic memory allocation. And although one may implement stack allocator to prevent dynamic memory allocation for small datasets, initialisation and lookups will still happen at runtime, because they are not marked \texttt{constexpr}.
+
+    With \texttt{C++14} relaxed constraints on \texttt{constexpr} functions it is possible to implement an associative container with \texttt{constexpr} (whenever possible) key lookups (as a proof, see the toy implementation of such a container in Appendix \ref{competency-code}). We think that a high quality implementation of such a container would be a worthwhile addition to \texttt{Boost}.
+
+
+
+    \paragraph{Proposal} As part of the Google Summer of Code 2017 project we propose to do the following:
+    \begin{itemize}
+    \item To seek consensus from the Boost Developer's mailing list on a suitable design of a \texttt{static\_map} class with the following design features:
+        \begin{enumerate}
+        \item The number of key--value pairs is fixed upon construction.
+        \item All features can be used in constant expressions, i.e. all member functions are marked \texttt{constexpr}.
+        \item The container can be statically initialised in the mind the compiler or global static storage.
+        \item Values, though neither keys nor the number of items, are modifiable.
+        \item The container performs constexpr key lookups to the ``maximum possible extent''.
+        \end{enumerate}
+
+        This list of requirements is harder to implement than it may seem at first sight. Consider the
+        following example:
+
+\begin{spacing}{0.8}
+\begin{lstlisting}
+constexpr std::pair<int, char const*> 
+    map_data[] = { { 5, "apple" }
+                 , { 8, "pear" },
+                 , { 0, "banana" }
+                 };
+
+// Generates no runtime code. Easy, because the standard requires this to be executed 
+// at compile-time.
+constexpr auto cmap = make_static_map(map_data);
+constexpr char const* what_is_5 = cmap[5];
+
+// Generates no runtime code. Easy, because 0 is a non-type template parameter.
+char const* what_is_0 = std::get<0>(cmap);
+
+// Challenging: should only generate code loading immediately from a memory location. 
+// It must NOT generate any additional runtime overhead like hashing or searching.
+char const* what_is_8 = cmap[8];
+
+// Challenging: again, should only generate code loading from memory.
+auto cmap2 = make_static_map(map_data);
+auto& at_0 = map_data[0];
+at_0 = "orange";
+\end{lstlisting}
+\end{spacing}
+    
+        If all inputs for a \texttt{constexpr} operation are constant expressions, but the result is not used as a constant expression, then the compiler in \textit{not required} to execute the operation at compile-time. This is what makes lines 19, 23 and 24 so challenging.
+
+    \item To implement a \texttt{static\_map} unordered associative container class which satisfies the above outlined requirements on top of the requirements in the standard. This includes the implementation of utility classes/functions for \texttt{constexpr} string comparison and hashing. The implementation should work on at least two major compilers in, hopefully, \texttt{C++14} mode.
+
+    \item To implement a comprehensive unit test suite for the \texttt{static\_map} class with focus on ensuring no runtime overhead for the challenging cases mentioned above (i.e. when the result of a \texttt{constexpr} function is not used as a constant expression).
+
+    \item To configure a per-commit continuous integration for the unit test suite on at least one of the major public open source CI services (e.g. Travis, Appveyor).
+
+    \item To write documentation to \texttt{Boost} quality levels for the \texttt{static\_map} container class. This includes time and space complexity guarantees and benchmarks, and exception guarantees for each function in the API and each use of each function. 
+    \end{itemize}
+
+
+    \paragraph{Schedule} We propose the following schedule to achieve the goals outlined above:
+
+    \begin{center}
+        \begin{tabular}{|r c l|p{10cm}|}
+        \hline
+        \noalign{\smallskip}
+        29th May & --- & 2nd June & \multirow{2}{10cm}{Consult Boost Developer's mailing list and do some background reading to come up with a suitable design for \texttt{static\_map} class and all required utility classes. In the meantime configure the system for development, i.e. get compilers, CI service, doc tools, etc., working. } \\
+        \pbox{\linewidth}{5th June\newline\hfill\newline\hfill\newline\hfill\newline\hfill} & \pbox{\linewidth}{---\newline\hfill\newline\hfill\newline\hfill\newline\hfill} & \pbox{\linewidth}{9th June\newline\hfill\newline\hfill\newline\hfill\newline\hfill} & \\
+        \noalign{\smallskip}
+        \hline
+        \noalign{\smallskip}
+        12th June & --- & 16th June & \multirow{3}{10cm}{Implement \texttt{static\_map} class for the simple case of keys being of integral type. Start writing tests and documentation. It would be nice to have a working implementation (for this simple case) before the first phase evaluation deadline.} \\
+        19th June & --- & 23th June & \\
+        \pbox{\linewidth}{26th June\newline\hfill\newline\hfill\newline\hfill} & \pbox{\linewidth}{---\newline\hfill\newline\hfill\newline\hfill} & \pbox{\linewidth}{30th June\newline\hfill\newline\hfill\newline\hfill} & \\
+        \noalign{\smallskip}
+        \hline
+        \noalign{\smallskip}
+        3rd July & --- & 7th July & \multirow{4}{10cm}{Complete the implementation of \texttt{static\_map} class and utility classes. Continue working on tests and documentation. It would be nice to have a fully working (on at least two compilers) implementation before the second phase evaluation deadline.} \\
+        10th July & --- & 14th July & \\
+        17th July & --- & 21th July & \\
+        \pbox{\linewidth}{24th July\newline\hfill\newline\hfill} & \pbox{\linewidth}{---\newline\hfill\newline\hfill} & \pbox{\linewidth}{28th July\newline\hfill\newline\hfill} & \\
+        \noalign{\smallskip}
+        \hline
+        \noalign{\smallskip}
+        31st July & --- & 4th August & \multirow{2}{10cm}{Finish implementing tests. Finish the documentation. Maybe do some work to support other compilers.} \\
+        7th August & --- & 11th August & \\
+        \noalign{\smallskip}
+        \hline
+        \noalign{\smallskip}
+        14th August & --- & 18th August & Extra \\
+        \noalign{\smallskip}
+        \hline
+        \noalign{\smallskip}
+        21st August & --- & 25th August & Final touches, submitting results. \\
+        \noalign{\smallskip}
+        \hline
+        \end{tabular}
+    \end{center}
+
+\section{Programming Competency}
+    The initial objective of was to reimplement the toy \texttt{static\_map} provided at \url{https://goo.gl/eO7ooa} so that \texttt{GCC} or \texttt{VS2017} would execute the non-\texttt{constexpr} assignment at compile time. 
+
+    My first idea was to use SFINAE to detect whether parameters are \texttt{constexpr}, and if they are, store the result of the lookup in a \texttt{constexpr} variable, thus forcing the compiler to evaluate the operation at compile-time. Detecting \texttt{constexpr}ness of parameters, however, proved to be impossible. One could write a macro to detect whether an expression passed to it is actually a constant expression (as it is done in the following answer: \url{http://stackoverflow.com/a/40413051}). More or less what GCC's \texttt{\_\_builtin\_constant\_p} does. Unfortunately, this only works with one level of indirection:
+    \begin{spacing}{0.8}
+\begin{lstlisting}
+constexpr auto factorial(std::size_t const n) -> std::size_t
+{
+	if (n == 0 || n == 1) return 1;
+	return n * factorial(n - 1);
+}
+
+constexpr auto foo(std::size_t const n)
+{
+	return __builtin_constant_p(factorial(n));
+}
+
+int main(void)
+{
+	static_assert(__builtin_constant_p(factorial(10)), "");
+	// This fails!
+	static_assert(foo(10), "");
+}
+\end{lstlisting}
+    \end{spacing}
+    I've thus come to the conclusion that there is no standard way to force the compiler to evaluate the expression at compile time, we have to rely on compiler's ``kindness'' to optimise it. After some trial and error I've figured that \texttt{GCC} does not like the following:
+    \begin{enumerate}
+    \item \label{itm:difficult_exceptions} ``Difficult'' exceptions such as \texttt{std::out\_of\_range}, \texttt{std::runtime\_error}, etc. I call these exceptions ``difficult'', because (at least in \texttt{GCC-6.3}) the error message is stored in a \texttt{class}/\texttt{struct} with non-\texttt{constexpr} operations.
+    \item \label{itm:throw_statements} \texttt{throw} statements in the function body. I.e. in the following code snippet
+        \begin{spacing}{0.8}
+\begin{lstlisting}
+constexpr auto foo1()
+{
+    auto x = compute_something();
+    if (good_answer(x)) return x;
+    throw std::runtime_error{""};
+}
+
+constexpr auto foo2()
+{
+    auto x = compute_something();
+    return good_answer(x)
+        ? x
+        : (throw std::runtime_error{""}, x);
+}
+\end{lstlisting}
+        \end{spacing}
+        \texttt{GCC} finds \texttt{foo2} easier to optimise. However, this is purely empirical, and compared to Item \ref{itm:difficult_exceptions} I don't have a theoretical explanation for it.
+
+    \item \label{itm:multiple_returns} Multiple return statements. This works well in combination with Item \ref{itm:throw_statements}. For example, consider the \texttt{static\_map::at} function in the toy implementation that was provided:
+        \begin{spacing}{0.8}
+\begin{lstlisting}
+constexpr auto at(key_type const& k) const -> mapped_type const&
+{
+    for (size_t n = 0; n < N; n++)
+        if (_values[n].second.first == k)
+            return _values[n].second.second;
+    throw key_not_found_error{};
+}
+\end{lstlisting}
+        \end{spacing}
+        I've already replaced the ``difficult'' \texttt{std::out\_of\_range} exceptions with an ``easy'' one. This doesn't help. \texttt{GCC-6.3} still produces runtime code for this function. However, if we follow the rules of Items \ref{itm:throw_statements} and \ref{itm:multiple_returns} and replace the original function with
+        \begin{spacing}{0.8}
+\begin{lstlisting}
+constexpr auto at(key_type const& k) const -> mapped_type const&
+{
+    size_t n = 0;
+    while (n < N && _values[n].second.first != k) {
+        ++n;
+    }
+    return n != N
+        ? _values[n].second.second
+        : (throw key_not_found_error{}, _values[0].second.second);
+}
+\end{lstlisting}
+        \end{spacing}
+        \texttt{GCC-6.3} optimises the function completely, i.e. no runtime code is produced for it. To prove that Item \ref{itm:difficult_exceptions} is useful, substitute \texttt{key\_not\_found\_error\{\}} by \texttt{std::out\_of\_range\{"Key not found."\}} --- runtime code is back.
+    \end{enumerate}
+    
+    It was a matter of following the described rules of thumb to satisfy the requirements of the competency test. From Niall Douglas I've learned that the test has outgrown its initial requirements and a complete toy implementation of the proposal was now desired.
+
+    Adding support for iterators and custom hash and equals functions is a matter of doing. The only challenging part is initialisation of the \texttt{static\_map}. In the original solution initialisation went as follows: the user passes a \texttt{C}-style array to \texttt{make\_static\_map} function, it expands the array into a parameter pack and passes it to the \texttt{static\_map} constructor which initialises the underlying storage type (again a \texttt{C}-array) using list initialisation. To make use of hashing, elements in the underlying array must appear in a certain order. Sorting the array after initialisation seems like a bad solution, because keys are constant. Storing keys as non-\texttt{const} would make \texttt{static\_map} inconsistent with other associate containers, and using \texttt{const\_casts} seems like a dirty hack is this case. The good place to sort the array would be the \texttt{make\_static\_map} function. In the original implementation this function expands the array \texttt{il} using \texttt{std::index\_sequence<\_Is...>} as \texttt{il[\_Is]...}\ . Thus sorting can be achieved by expanding \texttt{il} as \texttt{il[}$\sigma($\texttt{\_Is}$)$\texttt{]...}, where $\sigma$ is some permutation. My implementation of this idea can be found in Appendix \ref{competency-code}.
+
+    Another interesting thing about the original implementation is that it uses an array of \texttt{std::pair<std::size\_t, std::pair<key\_type const, mapped\_type>} as underlying storage. I found the extra \texttt{std::size\_t} unnecessary and decided to use an array of \texttt{std::pair<key\_type const, mapped\_type>} as the underlying storage. But then, as indicated by Niall, my solution stopped working with \texttt{Clang}. Thus I've decided to follow the ``convention'' used in \texttt{libstdc++} and created an inner storage class that allows the \texttt{static\_map} be implemented independent of the type of underlying storage type. Addition of this inner class turned out to be crutial as now even \texttt{Clang} was happy to optimise code without the extra \texttt{std::size\_t}.
+
+    My complete toy implementation of \texttt{static\_map} can be found in Appendix \ref{competency-code} or online on \url{} (easier to copy-paste into Compiler Explorer).
+
+\appendix
+\section{Code} \label{competency-code}
+    \begin{spacing}{0.8}
+    \lstinputlisting{static_map.cpp}
+    \end{spacing}
+
+\end{document}
